@@ -56,6 +56,13 @@ void ASCharacter::Move(const FInputActionValue& Value)
 	AddMovementInput(RightDirection, Movement.Y);
 }
 
+void ASCharacter::Jump(const FInputActionValue& Value)
+{
+	Super::Jump();
+
+	UE_LOG(LogTemp, Warning, TEXT("Jump"));
+}
+
 // Called every frame
 void ASCharacter::Tick(float DeltaTime)
 {
@@ -72,6 +79,7 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	{
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASCharacter::Look);
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASCharacter::Move);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ASCharacter::Jump);
 	}
 }
 

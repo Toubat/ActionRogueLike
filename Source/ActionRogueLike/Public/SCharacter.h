@@ -37,6 +37,8 @@ protected:
 
 	void Move(const FInputActionValue& Value);
 
+	void Jump(const FInputActionValue& Value);
+
 private:
 	/* <EnhancedInput> */
 	UPROPERTY(EditAnywhere, Category = Input)
@@ -47,5 +49,8 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* MoveAction;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* JumpAction;
 	/* </EnhancedInput> */
 };
