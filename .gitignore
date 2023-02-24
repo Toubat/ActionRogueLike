@@ -1,6 +1,10 @@
 # Visual Studio 2015 user specific files
 .vs/
 
+/Content/ParagonGideon/*
+/Content/ParagonMinions/*
+/Content/ExampleContent/*
+
 # Compiled Object files
 *.slo
 *.lo
