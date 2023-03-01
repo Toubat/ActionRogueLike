@@ -30,8 +30,11 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UParticleSystemComponent* Effect;
-	
+
 	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bBFromSweep, const FHitResult& SweepResult);
 	
 private:
 

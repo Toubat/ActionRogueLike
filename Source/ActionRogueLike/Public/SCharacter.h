@@ -33,6 +33,9 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArm;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> ProjectileClass;
+
 	virtual void BeginPlay() override;
 
 	void Look(const FInputActionValue& Value);
@@ -40,6 +43,8 @@ protected:
 	void Move(const FInputActionValue& Value);
 
 	void Jump(const FInputActionValue& Value);
+
+	void PrimaryAttack(const FInputActionValue& Value);
 
 private:
 	
@@ -55,5 +60,8 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* JumpAction;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* PrimaryAttackAction;
 	/* </EnhancedInput> */
 };
