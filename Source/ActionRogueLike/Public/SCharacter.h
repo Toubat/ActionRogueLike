@@ -7,10 +7,12 @@
 #include "GameFramework/Character.h"
 #include "SCharacter.generated.h"
 
+class USInteractionComponent;
 class UInputAction;
 class UInputMappingContext;
 class USpringArmComponent;
 class UCameraComponent;
+class UAnimMontage;
 
 UCLASS()
 class ACTIONROGUELIKE_API ASCharacter : public ACharacter
@@ -36,6 +38,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> ProjectileClass;
 
+	UPROPERTY(VisibleAnywhere)
+	USInteractionComponent* InteractionComponent;
+
 	virtual void BeginPlay() override;
 
 	void Look(const FInputActionValue& Value);
@@ -44,7 +49,10 @@ protected:
 
 	void Jump(const FInputActionValue& Value);
 
+	void SpawnProjectile() const;
 	void PrimaryAttack(const FInputActionValue& Value);
+
+	void PrimaryInteract(const FInputActionValue& Value);
 
 private:
 	
@@ -63,5 +71,17 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* PrimaryAttackAction;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* PrimaryInteractAction;
 	/* </EnhancedInput> */
+
+	/* <Animation Montages> */
+	UPROPERTY(EditAnywhere, Category = Montages)
+	UAnimMontage* PrimaryAttackMontage;
+	/* </Animation Montages> */
+
+	/* <TimerHandle> */
+	FTimerHandle PrimaryAttackTimer;
+	/* </TimerHandle> */
 };

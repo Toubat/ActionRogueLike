@@ -6,6 +6,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "SInteractionComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
@@ -20,6 +21,8 @@ ASCharacter::ASCharacter()
 	
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
+
+	InteractionComponent = CreateDefaultSubobject<USInteractionComponent>(TEXT("InteractionComponent"));
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
@@ -74,7 +77,7 @@ void ASCharacter::Jump(const FInputActionValue& Value)
 	UE_LOG(LogTemp, Warning, TEXT("Jump"));
 }
 
-void ASCharacter::PrimaryAttack(const FInputActionValue& Value) 
+void ASCharacter::SpawnProjectile() const
 {
 	const FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 	const FTransform ProjectileTransform(GetControlRotation(), HandLocation);
@@ -83,6 +86,17 @@ void ASCharacter::PrimaryAttack(const FInputActionValue& Value)
 	ProjectileParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, ProjectileTransform, ProjectileParams);
+}
+
+void ASCharacter::PrimaryAttack(const FInputActionValue& Value) 
+{
+	PlayAnimMontage(PrimaryAttackMontage);
+	GetWorldTimerManager().SetTimer(PrimaryAttackTimer, this, &ASCharacter::SpawnProjectile, 0.2f);
+}
+
+void ASCharacter::PrimaryInteract(const FInputActionValue& Value)
+{
+	InteractionComponent->PrimaryInteract();
 }
 
 // Called every frame
@@ -103,6 +117,7 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASCharacter::Move);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ASCharacter::Jump);
 		EnhancedInputComponent->BindAction(PrimaryAttackAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryAttack);
+		EnhancedInputComponent->BindAction(PrimaryInteractAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryInteract);
 	}
 }
 
