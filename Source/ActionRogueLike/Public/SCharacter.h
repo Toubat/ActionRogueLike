@@ -18,6 +18,7 @@ class ACTIONROGUELIKE_API ASCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
+	
 	ASCharacter();
 
 	virtual void Tick(float DeltaTime) override;
@@ -25,6 +26,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
+	
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* Camera;
 
@@ -40,6 +42,7 @@ protected:
 	void Jump(const FInputActionValue& Value);
 
 private:
+	
 	/* <EnhancedInput> */
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputMappingContext* InputContext;

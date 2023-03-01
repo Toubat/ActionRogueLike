@@ -6,6 +6,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -14,10 +15,15 @@ ASCharacter::ASCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	SpringArm->bUsePawnControlRotation = true;
 	SpringArm->SetupAttachment(GetRootComponent());
 	
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
+
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+
+	bUseControllerRotationYaw = false;
 }
 
 // Called when the game starts or when spawned
@@ -49,11 +55,16 @@ void ASCharacter::Move(const FInputActionValue& Value)
 	
 	const FRotator ControlRotation = GetControlRotation();
 	const FRotator YawRotation(0.f, ControlRotation.Yaw, 0.f);
-	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	const FVector ControlForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	const FVector ControlRightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
-	AddMovementInput(ForwardDirection, Movement.X);
-	AddMovementInput(RightDirection, Movement.Y);
+	// FVector Start = GetActorLocation();
+	// Start.Z += 50.f;
+	// DrawDebugDirectionalArrow(GetWorld(), Start, Start + GetActorForwardVector() * 200.f, 100.f, FColor::Red);
+	// DrawDebugDirectionalArrow(GetWorld(), Start, Start + ControlForwardDirection * 200.f, 100.f, FColor::Green);
+
+	AddMovementInput(ControlForwardDirection, Movement.X);
+	AddMovementInput(ControlRightDirection, Movement.Y);
 }
 
 void ASCharacter::Jump(const FInputActionValue& Value)
