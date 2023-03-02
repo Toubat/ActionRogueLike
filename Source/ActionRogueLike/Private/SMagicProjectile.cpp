@@ -5,6 +5,7 @@
 
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
@@ -30,13 +31,24 @@ void ASMagicProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Sphere->IgnoreActorWhenMoving(GetInstigator(), true);
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ASMagicProjectile::OnSphereBeginOverlap);
+	Sphere->OnComponentHit.AddDynamic(this, &ASMagicProjectile::OnSphereHit);
 }
 
 void ASMagicProjectile::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bBFromSweep, const FHitResult& SweepResult)
 {
 	DrawDebugSphere(GetWorld(), GetActorLocation(), 100.f, 12, FColor::Red);
+}
+
+void ASMagicProjectile::OnSphereHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (OtherActor == GetInstigator()) return;
+	
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Impact, GetActorLocation(), GetActorRotation());
+	Destroy();
 }
 
 // Called every frame

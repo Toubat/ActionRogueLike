@@ -3,6 +3,8 @@
 
 #include "SItemChest.h"
 
+#include "Particles/ParticleSystemComponent.h"
+
 // Sets default values
 ASItemChest::ASItemChest(): TargetPitch(110)
 {
@@ -13,7 +15,14 @@ ASItemChest::ASItemChest(): TargetPitch(110)
 	SetRootComponent(BaseMesh);
 
 	LidMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LidMesh"));
-	LidMesh->SetupAttachment(BaseMesh);
+	LidMesh->SetupAttachment(GetRootComponent());
+
+	GoldMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GoldMesh"));
+	GoldMesh->SetupAttachment(GetRootComponent());
+
+	TreasureParticles = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("TreasureParticles"));
+	TreasureParticles->SetAutoActivate(false);
+	TreasureParticles->SetupAttachment(GoldMesh);
 }
 
 // Called when the game starts or when spawned

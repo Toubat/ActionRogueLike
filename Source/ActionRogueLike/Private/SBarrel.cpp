@@ -16,8 +16,10 @@ ASBarrel::ASBarrel()
 	SetRootComponent(Mesh);
 
 	RadialForce = CreateDefaultSubobject<URadialForceComponent>(TEXT("RadialForce"));
-	RadialForce->ImpulseStrength = 20000.f;
+	RadialForce->SetAutoActivate(false);
+	RadialForce->ImpulseStrength = 2000.f;
 	RadialForce->Radius = 600.f;
+	RadialForce->bImpulseVelChange = true;
 	RadialForce->SetupAttachment(Mesh);
 }
 
@@ -25,7 +27,20 @@ ASBarrel::ASBarrel()
 void ASBarrel::BeginPlay()
 {
 	Super::BeginPlay();
-	
+}
+
+void ASBarrel::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	Mesh->OnComponentHit.AddUniqueDynamic(this, &ASBarrel::OnMeshHit);
+}
+
+void ASBarrel::OnMeshHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+                         FVector NormalImpulse, const FHitResult& Hit)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("OnMeshHit"));
+	RadialForce->FireImpulse();
 }
 
 // Called every frame

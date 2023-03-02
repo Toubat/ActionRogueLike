@@ -49,7 +49,7 @@ protected:
 
 	void Jump(const FInputActionValue& Value);
 
-	void SpawnProjectile() const;
+	void SpawnProjectile();
 	void PrimaryAttack(const FInputActionValue& Value);
 
 	void PrimaryInteract(const FInputActionValue& Value);

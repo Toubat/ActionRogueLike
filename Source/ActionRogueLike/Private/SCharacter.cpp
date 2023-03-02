@@ -77,13 +77,14 @@ void ASCharacter::Jump(const FInputActionValue& Value)
 	UE_LOG(LogTemp, Warning, TEXT("Jump"));
 }
 
-void ASCharacter::SpawnProjectile() const
+void ASCharacter::SpawnProjectile() 
 {
 	const FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 	const FTransform ProjectileTransform(GetControlRotation(), HandLocation);
 	
 	FActorSpawnParameters ProjectileParams;
 	ProjectileParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	ProjectileParams.Instigator = this;
 	
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, ProjectileTransform, ProjectileParams);
 }

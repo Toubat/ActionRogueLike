@@ -23,8 +23,14 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	URadialForceComponent* RadialForce;
-	
+
+	UFUNCTION()
 	virtual void BeginPlay() override;
+
+	virtual void PostInitializeComponents() override;
+
+	UFUNCTION()
+	void OnMeshHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 private:
 

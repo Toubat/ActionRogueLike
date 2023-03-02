@@ -27,8 +27,14 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* BaseMesh;
 
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* LidMesh; 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UStaticMeshComponent* LidMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UStaticMeshComponent* GoldMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UParticleSystemComponent* TreasureParticles;
 	
 	virtual void BeginPlay() override;
 
