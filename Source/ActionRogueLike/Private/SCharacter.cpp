@@ -7,6 +7,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "SInteractionComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
@@ -80,12 +81,14 @@ void ASCharacter::Jump(const FInputActionValue& Value)
 void ASCharacter::SpawnProjectile() 
 {
 	const FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-	const FTransform ProjectileTransform(GetControlRotation(), HandLocation);
+	const FRotator LookRotation = UKismetMathLibrary::FindLookAtRotation(HandLocation, GetCrossHairLocation());
+	
+	const FTransform ProjectileTransform(LookRotation, HandLocation);
 	
 	FActorSpawnParameters ProjectileParams;
 	ProjectileParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	ProjectileParams.Instigator = this;
-	
+
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, ProjectileTransform, ProjectileParams);
 }
 
@@ -100,11 +103,35 @@ void ASCharacter::PrimaryInteract(const FInputActionValue& Value)
 	InteractionComponent->PrimaryInteract();
 }
 
+FVector ASCharacter::GetCrossHairLocation() const
+{
+	const FVector Start = Camera->GetComponentLocation();
+	const FVector Rotation = Camera->GetComponentRotation().Vector();
+	const FVector End = Start + Rotation * FireRange;
+
+	FCollisionObjectQueryParams ObjectQueryParams;
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_PhysicsBody);
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_Pawn);
+	
+	FHitResult Hit;
+	bool bBlockHit = GetWorld()->LineTraceSingleByObjectType(Hit, Start, End, ObjectQueryParams);
+
+	if (bBlockHit) {
+		// DrawDebugSphere(GetWorld(), Start, 100.f, 16, FColor::Red);
+		// DrawDebugLine(GetWorld(), Start, End, FColor::Green);
+		// DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 100.f, 16, FColor::Blue);
+		// DrawDebugPoint(GetWorld(), Hit.ImpactPoint, 5.f, FColor::Blue);
+	}
+	
+	return bBlockHit ? Hit.Location : End;
+}
+
 // Called every frame
 void ASCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input

@@ -29,7 +29,7 @@ public:
 
 protected:
 	
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UCameraComponent* Camera;
 
 	UPROPERTY(VisibleAnywhere)
@@ -50,11 +50,16 @@ protected:
 	void Jump(const FInputActionValue& Value);
 
 	void SpawnProjectile();
+	
 	void PrimaryAttack(const FInputActionValue& Value);
 
 	void PrimaryInteract(const FInputActionValue& Value);
 
+	FVector GetCrossHairLocation() const;
+
 private:
+	UPROPERTY(EditAnywhere)
+	float FireRange = 5000.f;
 	
 	/* <EnhancedInput> */
 	UPROPERTY(EditAnywhere, Category = Input)
