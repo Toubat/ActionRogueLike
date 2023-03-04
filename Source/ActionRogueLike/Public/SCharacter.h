@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
 #include "GameFramework/Character.h"
+#include "SProjectileBase.h"
 #include "SCharacter.generated.h"
 
 class USInteractionComponent;
@@ -36,7 +37,13 @@ protected:
 	USpringArmComponent* SpringArm;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<AActor> ProjectileClass;
+	TSubclassOf<ASProjectileBase> PrimaryProjectileClass;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ASProjectileBase> PortalProjectileClass;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ASProjectileBase> BlackHoleProjectileClass;
 
 	UPROPERTY(VisibleAnywhere)
 	USInteractionComponent* InteractionComponent;
@@ -55,11 +62,16 @@ protected:
 
 	void PrimaryInteract(const FInputActionValue& Value);
 
+	void PrimarySkill(const FInputActionValue& Value);
+
 	FVector GetCrossHairLocation() const;
 
 private:
 	UPROPERTY(EditAnywhere)
 	float FireRange = 5000.f;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ASProjectileBase> CurrentProjectileClass;
 	
 	/* <EnhancedInput> */
 	UPROPERTY(EditAnywhere, Category = Input)
@@ -79,6 +91,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* PrimaryInteractAction;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* PrimarySkillAction;
 	/* </EnhancedInput> */
 
 	/* <Animation Montages> */

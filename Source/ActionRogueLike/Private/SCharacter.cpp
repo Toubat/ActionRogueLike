@@ -89,18 +89,26 @@ void ASCharacter::SpawnProjectile()
 	ProjectileParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	ProjectileParams.Instigator = this;
 
-	GetWorld()->SpawnActor<AActor>(ProjectileClass, ProjectileTransform, ProjectileParams);
+	GetWorld()->SpawnActor<AActor>(CurrentProjectileClass, ProjectileTransform, ProjectileParams);
 }
 
 void ASCharacter::PrimaryAttack(const FInputActionValue& Value) 
 {
 	PlayAnimMontage(PrimaryAttackMontage);
+	CurrentProjectileClass = PrimaryProjectileClass;
 	GetWorldTimerManager().SetTimer(PrimaryAttackTimer, this, &ASCharacter::SpawnProjectile, 0.2f);
 }
 
 void ASCharacter::PrimaryInteract(const FInputActionValue& Value)
 {
 	InteractionComponent->PrimaryInteract();
+}
+
+void ASCharacter::PrimarySkill(const FInputActionValue& Value)
+{
+	PlayAnimMontage(PrimaryAttackMontage);
+	CurrentProjectileClass = BlackHoleProjectileClass;
+	GetWorldTimerManager().SetTimer(PrimaryAttackTimer, this, &ASCharacter::SpawnProjectile, 0.2f);
 }
 
 FVector ASCharacter::GetCrossHairLocation() const
@@ -146,6 +154,7 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ASCharacter::Jump);
 		EnhancedInputComponent->BindAction(PrimaryAttackAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryAttack);
 		EnhancedInputComponent->BindAction(PrimaryInteractAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryInteract);
+		EnhancedInputComponent->BindAction(PrimarySkillAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimarySkill);
 	}
 }
 

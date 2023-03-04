@@ -19,21 +19,18 @@ ASMagicProjectile::ASMagicProjectile()
 void ASMagicProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-
-	Sphere->IgnoreActorWhenMoving(GetInstigator(), true);
-	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ASMagicProjectile::OnSphereBeginOverlap);
-	Sphere->OnComponentHit.AddDynamic(this, &ASMagicProjectile::OnSphereHit);
 }
 
 void ASMagicProjectile::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bBFromSweep, const FHitResult& SweepResult)
 {
-	DrawDebugSphere(GetWorld(), GetActorLocation(), 100.f, 12, FColor::Red);
+	Super::OnSphereBeginOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bBFromSweep, SweepResult);
 }
 
 void ASMagicProjectile::OnSphereHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+	Super::OnSphereHit(HitComponent, OtherActor, OtherComp, NormalImpulse, Hit);
 	if (OtherActor == GetInstigator()) return;
 	
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Impact, GetActorLocation(), GetActorRotation());

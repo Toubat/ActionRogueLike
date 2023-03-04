@@ -23,13 +23,17 @@ ASProjectileBase::ASProjectileBase()
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
 	ProjectileMovement->InitialSpeed = 1000.f;
+	ProjectileMovement->ProjectileGravityScale = 0.f;
 }
 
 // Called when the game starts or when spawned
 void ASProjectileBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	Sphere->IgnoreActorWhenMoving(GetInstigator(), true);
+	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ASProjectileBase::OnSphereBeginOverlap);
+	Sphere->OnComponentHit.AddDynamic(this, &ASProjectileBase::OnSphereHit);
 }
 
 void ASProjectileBase::OnSphereHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
