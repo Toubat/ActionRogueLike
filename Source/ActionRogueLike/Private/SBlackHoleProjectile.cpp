@@ -15,8 +15,22 @@ ASBlackHoleProjectile::ASBlackHoleProjectile()
 	Gravity->bIgnoreOwningActor = true;
 }
 
+void ASBlackHoleProjectile::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	Gravity->FireImpulse();
+}
+
+void ASBlackHoleProjectile::BeginPlay()
+{
+	Super::BeginPlay();
+
+	GetWorldTimerManager().SetTimer(DestroyTimer, this, &ASBlackHoleProjectile::DestroyActor, Duration);
+}
+
 void ASBlackHoleProjectile::OnSphereHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+                                        UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	Super::OnSphereHit(HitComponent, OtherActor, OtherComp, NormalImpulse, Hit);
 }
@@ -25,4 +39,16 @@ void ASBlackHoleProjectile::OnSphereBeginOverlap(UPrimitiveComponent* Overlapped
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bBFromSweep, const FHitResult& SweepResult)
 {
 	Super::OnSphereBeginOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bBFromSweep, SweepResult);
+
+	const ECollisionChannel CollisionChannel = OtherComp->GetCollisionObjectType();
+
+	if (CollisionChannel == ECollisionChannel::ECC_PhysicsBody)
+	{
+		OtherActor->Destroy();
+	}
+}
+
+void ASBlackHoleProjectile::DestroyActor()
+{
+	Destroy();
 }

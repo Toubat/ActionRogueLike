@@ -96,7 +96,7 @@ void ASCharacter::PrimaryAttack(const FInputActionValue& Value)
 {
 	PlayAnimMontage(PrimaryAttackMontage);
 	CurrentProjectileClass = PrimaryProjectileClass;
-	GetWorldTimerManager().SetTimer(PrimaryAttackTimer, this, &ASCharacter::SpawnProjectile, 0.2f);
+	GetWorldTimerManager().SetTimer(AttackTimer, this, &ASCharacter::SpawnProjectile, 0.2f);
 }
 
 void ASCharacter::PrimaryInteract(const FInputActionValue& Value)
@@ -104,17 +104,25 @@ void ASCharacter::PrimaryInteract(const FInputActionValue& Value)
 	InteractionComponent->PrimaryInteract();
 }
 
-void ASCharacter::PrimarySkill(const FInputActionValue& Value)
+void ASCharacter::BlackHole(const FInputActionValue& Value)
 {
 	PlayAnimMontage(PrimaryAttackMontage);
 	CurrentProjectileClass = BlackHoleProjectileClass;
-	GetWorldTimerManager().SetTimer(PrimaryAttackTimer, this, &ASCharacter::SpawnProjectile, 0.2f);
+	GetWorldTimerManager().SetTimer(AttackTimer, this, &ASCharacter::SpawnProjectile, 0.2f);
+}
+
+void ASCharacter::Teleport(const FInputActionValue& Value)
+{
+	PlayAnimMontage(PrimaryAttackMontage);
+	CurrentProjectileClass = TeleportProjectileClass;
+	GetWorldTimerManager().SetTimer(AttackTimer, this, &ASCharacter::SpawnProjectile, 0.2f);
 }
 
 FVector ASCharacter::GetCrossHairLocation() const
 {
-	const FVector Start = Camera->GetComponentLocation();
+	const FVector CameraLocation = Camera->GetComponentLocation();
 	const FVector Rotation = Camera->GetComponentRotation().Vector();
+	const FVector Start = CameraLocation + Rotation;
 	const FVector End = Start + Rotation * FireRange;
 
 	FCollisionObjectQueryParams ObjectQueryParams;
@@ -154,7 +162,8 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ASCharacter::Jump);
 		EnhancedInputComponent->BindAction(PrimaryAttackAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryAttack);
 		EnhancedInputComponent->BindAction(PrimaryInteractAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimaryInteract);
-		EnhancedInputComponent->BindAction(PrimarySkillAction, ETriggerEvent::Triggered, this, &ASCharacter::PrimarySkill);
+		EnhancedInputComponent->BindAction(BlackHoleAction, ETriggerEvent::Triggered, this, &ASCharacter::BlackHole);
+		EnhancedInputComponent->BindAction(TeleportAction, ETriggerEvent::Triggered, this, &ASCharacter::Teleport);
 	}
 }
 

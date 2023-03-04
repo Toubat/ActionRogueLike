@@ -4,38 +4,44 @@
 
 #include "CoreMinimal.h"
 #include "SProjectileBase.h"
-#include "SBlackHoleProjectile.generated.h"
+#include "STeleportProjectile.generated.h"
 
-class URadialForceComponent;
-
+/**
+ * 
+ */
 UCLASS()
-class ACTIONROGUELIKE_API ASBlackHoleProjectile : public ASProjectileBase
+class ACTIONROGUELIKE_API ASTeleportProjectile : public ASProjectileBase
 {
 	GENERATED_BODY()
-
+	
 public:
-
-	ASBlackHoleProjectile();
+	
+	ASTeleportProjectile();
 
 	virtual void Tick(float DeltaTime) override;
 
 protected:
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	URadialForceComponent* Gravity;
 
 	virtual void BeginPlay() override;
 
 	virtual void OnSphereHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) override;
 
 	virtual void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bBFromSweep, const FHitResult& SweepResult) override;
-	
+
 private:
 	UPROPERTY(EditAnywhere)
-	float Duration = 5.f;
+	float OpenPortalDuration = 0.2f;
+
+	UPROPERTY(EditAnywhere)
+	float TeleportDuration = 0.2f;
+	
+	UPROPERTY()
+	FTimerHandle OpenPortalTimer;
 
 	UPROPERTY()
-	FTimerHandle DestroyTimer;
+	FTimerHandle TeleportTimer;
 
-	void DestroyActor();
+	void SpawnTeleportPortal();
+
+	void TeleportInstigator();
 };

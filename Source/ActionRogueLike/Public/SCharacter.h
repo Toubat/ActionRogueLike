@@ -40,7 +40,7 @@ protected:
 	TSubclassOf<ASProjectileBase> PrimaryProjectileClass;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<ASProjectileBase> PortalProjectileClass;
+	TSubclassOf<ASProjectileBase> TeleportProjectileClass;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ASProjectileBase> BlackHoleProjectileClass;
@@ -62,7 +62,9 @@ protected:
 
 	void PrimaryInteract(const FInputActionValue& Value);
 
-	void PrimarySkill(const FInputActionValue& Value);
+	void BlackHole(const FInputActionValue& Value);
+
+	void Teleport(const FInputActionValue& Value);
 
 	FVector GetCrossHairLocation() const;
 
@@ -93,7 +95,10 @@ private:
 	UInputAction* PrimaryInteractAction;
 
 	UPROPERTY(EditAnywhere, Category = Input)
-	UInputAction* PrimarySkillAction;
+	UInputAction* BlackHoleAction;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* TeleportAction;
 	/* </EnhancedInput> */
 
 	/* <Animation Montages> */
@@ -102,6 +107,6 @@ private:
 	/* </Animation Montages> */
 
 	/* <TimerHandle> */
-	FTimerHandle PrimaryAttackTimer;
+	FTimerHandle AttackTimer;
 	/* </TimerHandle> */
 };
