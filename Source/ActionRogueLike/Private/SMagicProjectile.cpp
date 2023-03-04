@@ -13,17 +13,6 @@ ASMagicProjectile::ASMagicProjectile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
-	Sphere->SetCollisionProfileName("Projectile");
-	Sphere->SetGenerateOverlapEvents(true);
-	SetRootComponent(Sphere);
-
-	Effect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Effect")); 
-	Effect->SetupAttachment(Sphere);
-
-	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
-	ProjectileMovement->InitialSpeed = 1000.f;
 }
 
 // Called when the game starts or when spawned
