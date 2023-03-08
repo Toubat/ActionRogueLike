@@ -8,6 +8,7 @@
 #include "SProjectileBase.h"
 #include "SCharacter.generated.h"
 
+class USAttributeComponent;
 class USInteractionComponent;
 class UInputAction;
 class UInputMappingContext;
@@ -47,6 +48,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	USInteractionComponent* InteractionComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
+	USAttributeComponent* AttributeComponent;
 
 	virtual void BeginPlay() override;
 

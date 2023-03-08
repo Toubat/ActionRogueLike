@@ -31,6 +31,7 @@ void ASProjectileBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Ignore the instigator
 	Sphere->IgnoreActorWhenMoving(GetInstigator(), true);
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ASProjectileBase::OnSphereBeginOverlap);
 	Sphere->OnComponentHit.AddDynamic(this, &ASProjectileBase::OnSphereHit);

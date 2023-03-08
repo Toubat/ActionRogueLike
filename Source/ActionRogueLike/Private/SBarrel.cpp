@@ -3,6 +3,8 @@
 
 #include "SBarrel.h"
 
+#include "SAttributeComponent.h"
+#include "SCharacter.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 
 // Sets default values
@@ -41,6 +43,13 @@ void ASBarrel::OnMeshHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, 
 {
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("OnMeshHit"));
 	RadialForce->FireImpulse();
+
+	USAttributeComponent* Attribute = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
+	if (Attribute)
+	{
+		Attribute->ApplyHealthChange(-50.f);
+		Destroy();
+	}
 }
 
 // Called every frame

@@ -3,6 +3,7 @@
 
 #include "SMagicProjectile.h"
 
+#include "SAttributeComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -25,6 +26,18 @@ void ASMagicProjectile::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComp
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bBFromSweep, const FHitResult& SweepResult)
 {
 	Super::OnSphereBeginOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bBFromSweep, SweepResult);
+
+	UE_LOG(LogTemp, Warning, TEXT("OnSphereBeginOverlap"));
+	if (OtherActor)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("OtherActor"));
+		USAttributeComponent* Attribute = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
+		if (Attribute)
+		{
+			Attribute->ApplyHealthChange(-20.f);
+			Destroy();
+		}
+	} 
 }
 
 void ASMagicProjectile::OnSphereHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
