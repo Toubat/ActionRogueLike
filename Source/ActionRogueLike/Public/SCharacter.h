@@ -51,7 +51,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
 	USAttributeComponent* AttributeComponent;
-
+	
 	virtual void BeginPlay() override;
 
 	void Look(const FInputActionValue& Value);
@@ -71,6 +71,9 @@ protected:
 	void Teleport(const FInputActionValue& Value);
 
 	FVector GetCrossHairLocation() const;
+
+	UFUNCTION()
+	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth, float Delta);
 
 private:
 	UPROPERTY(EditAnywhere)

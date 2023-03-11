@@ -26,16 +26,15 @@ void ASMagicProjectile::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComp
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bBFromSweep, const FHitResult& SweepResult)
 {
 	Super::OnSphereBeginOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bBFromSweep, SweepResult);
-
-	UE_LOG(LogTemp, Warning, TEXT("OnSphereBeginOverlap"));
-	if (OtherActor)
+	
+	if (OtherActor && OtherActor != GetInstigator())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("OtherActor"));
 		USAttributeComponent* Attribute = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
 		if (Attribute)
 		{
 			Attribute->ApplyHealthChange(-20.f);
-			Destroy();
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), ImpactSound, GetActorLocation());
+ 			Destroy();
 		}
 	} 
 }
@@ -47,6 +46,7 @@ void ASMagicProjectile::OnSphereHit(UPrimitiveComponent* HitComponent, AActor* O
 	if (OtherActor == GetInstigator()) return;
 	
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Impact, GetActorLocation(), GetActorRotation());
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), ImpactSound, GetActorLocation());
 	Destroy();
 }
 

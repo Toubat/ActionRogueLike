@@ -26,5 +26,6 @@ protected:
 	virtual void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bBFromSweep, const FHitResult& SweepResult) override;
 	
 private:
-
+	UPROPERTY(EditAnywhere)
+	USoundBase* ImpactSound;
 };

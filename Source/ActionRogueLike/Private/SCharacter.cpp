@@ -44,7 +44,8 @@ void ASCharacter::BeginPlay()
 			Subsystem->AddMappingContext(InputContext, 0);
 		}
 	}
-	
+
+	AttributeComponent->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
 }
 
 void ASCharacter::Look(const FInputActionValue& Value)
@@ -144,6 +145,19 @@ FVector ASCharacter::GetCrossHairLocation() const
 	}
 	
 	return bBlockHit ? Hit.Location : End;
+}
+
+void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth,
+	float Delta)
+{
+	if (NewHealth <= 0.f && Delta < 0.0f)
+	{
+		APlayerController* PlayerController = Cast<APlayerController>(GetController());
+		DisableInput(PlayerController);
+	} else
+	{
+		GetMesh()->SetScalarParameterValueOnMaterials("TimeToHit", GetWorld()->TimeSeconds);
+	}
 }
 
 // Called every frame
