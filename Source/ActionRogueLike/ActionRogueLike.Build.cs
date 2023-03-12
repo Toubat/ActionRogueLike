@@ -15,7 +15,8 @@ public class ActionRogueLike : ModuleRules
 			"Engine", 
 			"InputCore", 
 			"EnhancedInput",
-			"AIModule"
+			"AIModule",
+			"GameplayTasks"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
